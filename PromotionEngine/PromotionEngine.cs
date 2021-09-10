@@ -1,6 +1,7 @@
 ﻿using PromotionEngine.Promotions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PromotionEngine
 {
@@ -12,21 +13,41 @@ namespace PromotionEngine
 
     public class PromotionEngine : IEngine
     {
-        private readonly List<IPromotion> Promotions;
+        private readonly List<IPromotion> _promotions;
 
         public PromotionEngine()
         {
-            Promotions = new List<IPromotion>();
+            _promotions = new List<IPromotion>();
         }
 
         public void AddPromotion(IPromotion promotion)
         {
-            Promotions.Add(promotion);
+            _promotions.Add(promotion);
         }
 
         public decimal CalculateTotal(IEnumerable<CartItem> items)
         {
-            throw new NotImplementedException();
+            var list = items.ToList();
+            var total = 0M;
+            foreach(var p in _promotions)
+            {
+                var matches = p.GetMatches(list);
+                var matchesItems = matches.SelectMany(x => x.Items);
+                foreach (var item in matchesItems)
+                {
+                    list.Remove(item); // item can only be used in 1 promotion
+                }
+
+                total += matches.Sum(x => x.GroupPrice);
+            }
+
+            foreach(var item in list)
+            {
+                // add items not part of a promotion
+                total += item.Price;
+            }
+
+            return total;
         }
     }
 }

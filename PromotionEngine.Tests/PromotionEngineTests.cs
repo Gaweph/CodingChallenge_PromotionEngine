@@ -1,4 +1,5 @@
 using FluentAssertions;
+using PromotionEngine.Promotions;
 using System;
 using Xunit;
 
@@ -6,15 +7,25 @@ namespace PromotionEngine.Tests
 {
     public class PromotionEngineTests
     {
+        private readonly PromotionEngine _engine;
+
+        public PromotionEngineTests()
+        {
+            _engine = new PromotionEngine();
+
+            _engine.AddPromotion(new NItemsForFixedPrice('A', 3, 130));
+            _engine.AddPromotion(new NItemsForFixedPrice('B', 2, 45));
+            _engine.AddPromotion(new FixedPricePromotion(new[] { 'C', 'D' }, 30));
+        }
+
         [Fact]
         public void CalculateTotal__Should_Return_Expected_ScenarioA()
         {
             // ARRANGE
-            var engine = new PromotionEngine();
             var items = new[] { A, B, C};
 
             // ACT
-            var total = engine.CalculateTotal(items);
+            var total = _engine.CalculateTotal(items);
 
             // ASSERT
             total.Should().Be(100);
@@ -24,14 +35,13 @@ namespace PromotionEngine.Tests
         public void CalculateTotal__Should_Return_Expected_ScenarioB()
         {
             // ARRANGE
-            var engine = new PromotionEngine();
             var items = new[]
             {
                 A, A, A, A, A, B, B, B, B, B, C
             };
 
             // ACT
-            var total = engine.CalculateTotal(items);
+            var total = _engine.CalculateTotal(items);
 
             // ASSERT
             total.Should().Be(370);
@@ -41,13 +51,12 @@ namespace PromotionEngine.Tests
         public void CalculateTotal__Should_Return_Expected_ScenarioC()
         {
             // ARRANGE
-            var engine = new PromotionEngine();
             var items = new[]
             {
                 A, A, A, B, B, B, B, B, C, D
             };
             // ACT
-            var total = engine.CalculateTotal(items);
+            var total = _engine.CalculateTotal(items);
 
             // ASSERT
             total.Should().Be(280);
