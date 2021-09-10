@@ -1,6 +1,7 @@
 using FluentAssertions;
 using PromotionEngine.Promotions;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace PromotionEngine.Tests
@@ -16,6 +17,34 @@ namespace PromotionEngine.Tests
             _engine.AddPromotion(new NItemsForFixedPrice('A', 3, 130));
             _engine.AddPromotion(new NItemsForFixedPrice('B', 2, 45));
             _engine.AddPromotion(new FixedPricePromotion(new[] { 'C', 'D' }, 30));
+        }
+
+        [Fact]
+        public void CalculateTotal__Should_Return_Expected_When_No_Items()
+        {
+            // ARRANGE
+            var items = new CartItem[0];
+
+            // ACT
+            var total = _engine.CalculateTotal(items);
+
+            // ASSERT
+            total.Should().Be(0);
+        }
+
+
+        [Fact]
+        public void CalculateTotal__Should_Return_Expected_When_No_Promotions()
+        {
+            // ARRANGE
+            var engineWithNoPromotions = new PromotionEngine();
+            var items = new[] { A, A, B, C, D };
+
+            // ACT
+            var total = engineWithNoPromotions.CalculateTotal(items);
+
+            // ASSERT
+            total.Should().Be(items.Sum(x => x.Price));
         }
 
         [Fact]

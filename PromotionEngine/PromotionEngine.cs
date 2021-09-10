@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace PromotionEngine
 {
-    public interface IEngine
+    public interface IPromotionEngine
     {
         public void AddPromotion(IPromotion promotion);
         public decimal CalculateTotal(IEnumerable<CartItem> items);
     }
 
-    public class PromotionEngine : IEngine
+    public class PromotionEngine : IPromotionEngine
     {
         private readonly List<IPromotion> _promotions;
 

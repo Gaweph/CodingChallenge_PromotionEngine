@@ -5,7 +5,7 @@ namespace PromotionEngine.Promotions
 {
     public interface IPromotion
     {
-        public IEnumerable<PromotionMatch> GetMatches(IEnumerable<CartItem> allItems);
+        public IEnumerable<PromotionMatch> GetMatches(IEnumerable<CartItem> items);
     }
 
 }
