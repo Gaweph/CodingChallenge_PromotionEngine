@@ -4,6 +4,7 @@ using Xunit;
 
 namespace PromotionEngine.Tests
 {
+
     public class FixedPricePromotionTests
     {
         [Fact]

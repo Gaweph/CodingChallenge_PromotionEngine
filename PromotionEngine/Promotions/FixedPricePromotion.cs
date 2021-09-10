@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace PromotionEngine.Promotions
 {
+
+
     // buy SKU 1 & SKU 2 for a fixed price ( C + D = 30 )
     public class FixedPricePromotion : IPromotion
     {
